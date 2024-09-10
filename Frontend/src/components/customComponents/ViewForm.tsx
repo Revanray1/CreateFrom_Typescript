@@ -1,7 +1,5 @@
 import React from 'react'
-import {ViewFormDetailsProps} from '../../interfaces'
-
-
+import { ViewFormDetailsProps } from '../../interfaces'
 
 const ViewForm: React.FC<ViewFormDetailsProps> = ({
   userData
@@ -30,38 +28,41 @@ const ViewForm: React.FC<ViewFormDetailsProps> = ({
         <div className='text-center truncate hover:text-clip border-l-2  border-grey'>{userData.email}</div>
       </div>
 
+      {userData.education.length > 0 &&
+        <div className='grid grid-cols-2 gap-4 min-h-52 bg-white h-52 border'>
+          <div className='text-center font-bold'>Education Details</div>
 
-      <div className='grid grid-cols-2 gap-4 min-h-52 bg-white h-52 border'>
-        <div className='text-center font-bold'>Edudation Details</div>
-
-        <div className='text-center border-l-2  border-grey overflow-scroll no-scrollbar'>{userData.education?.map((data, index) => (<>
-          <div className='m-6 ' key={index+"edu"}>
-            <div className='font-bold text-blue-500'>Details :{index + 1}</div>
-            <hr className='horizontaline' />
-            <div className='overflow-x-scroll no-scrollbar'>
-              <div className='grid grid-cols-2 gap-4 mx-16'><div className='font-bold' >College Name </div> <div>{data.collegeName}</div></div>
-              <div className='grid grid-cols-2 gap-4 mx-16'><div className='font-bold' >From</div> <div>{data.joinedOnYear}</div></div>
-              <div className='grid grid-cols-2 gap-4 mx-16'><div className='font-bold' >To </div> <div>{data.completedYear}</div></div>
+          <div className='text-center border-l-2  border-grey overflow-scroll no-scrollbar'>{userData.education?.map((data, index) => (<>
+            <div className='m-6 ' key={index + "edu"}>
+              <div className='font-bold text-blue-500'>Details :{index + 1}</div>
+              <hr className='horizontaline' />
+              <div className='overflow-x-scroll no-scrollbar'>
+                <div className='grid grid-cols-2 gap-4 mx-16'><div className='font-bold' >College Name </div> <div>{data.collegeName}</div></div>
+                <div className='grid grid-cols-2 gap-4 mx-16'><div className='font-bold' >From</div> <div>{data.joinedOnYear}</div></div>
+                <div className='grid grid-cols-2 gap-4 mx-16'><div className='font-bold' >To </div> <div>{data.completedYear}</div></div>
+              </div>
             </div>
+          </>))}
           </div>
-        </>))}</div>
-      </div>
+        </div>}
 
-      <div className='grid grid-cols-2 gap-4 min-h-52 bg-white h-52 border' >
-        <div className='text-center font-bold'>Work Details</div>
-        <div className='text-center border-l-2  border-grey overflow-scroll no-scrollbar'>{userData.workExperience?.map((data, index) => (<>
-          <div className='m-6' key={index+"work"}>
-            <div className='font-bold text-blue-500'>Details :{index + 1}</div>
-            <hr className='horizontaline' />
+      {userData.workExperience.length > 0 &&
+        <div className='grid grid-cols-2 gap-4 min-h-52 bg-white h-52 border' >
+          <div className='text-center font-bold'>Work Details</div>
+          <div className='text-center border-l-2  border-grey overflow-scroll no-scrollbar'>{userData.workExperience?.map((data, index) => (<>
+            <div className='m-6' key={index + "work"}>
+              <div className='font-bold text-blue-500'>Details :{index + 1}</div>
+              <hr className='horizontaline' />
 
-            <div className='overflow-x-scroll no-scrollbar'>
-              <div className='grid grid-cols-2 gap-4 mx-16 '><div className='font-bold'>Company Name </div> <div>{data.companyName}</div></div>
-              <div className='grid grid-cols-2 gap-4 mx-16'><div className='font-bold'>From</div> <div>{data.workJoinedYear}</div></div>
-              <div className='grid grid-cols-2 gap-4 mx-16'><div className='font-bold'>To </div> <div>{data.workRelievedYear}</div></div>
+              <div className='overflow-x-scroll no-scrollbar'>
+                <div className='grid grid-cols-2 gap-4 mx-16 '><div className='font-bold'>Company Name </div> <div>{data.companyName}</div></div>
+                <div className='grid grid-cols-2 gap-4 mx-16'><div className='font-bold'>From</div> <div>{data.workJoinedYear}</div></div>
+                <div className='grid grid-cols-2 gap-4 mx-16'><div className='font-bold'>To </div> <div>{data.workRelievedYear}</div></div>
+              </div>
             </div>
-          </div>
-        </>))}</div>
-      </div>
+          </>))}</div>
+        </div>
+      }
     </div>
   )
 }

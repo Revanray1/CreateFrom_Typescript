@@ -1,15 +1,18 @@
 "use client"
-import React, {useState } from "react";
+import React, { useState } from "react";
 import BasicDetailsForm from "./FormBasicDetails"
 import EducationDetails from "./FormEducationalDetails"
 import WorkExperienceDetails from "./FormWorkExperience"
 import { createUser } from '../../api/userApi';
-import MessageWithButtonComponent from  './MessageWithButtonComponent'
-import {FormData,StepperProps} from "../../interfaces"
-import {EDUCATION, EMAIL, WORK_EXPERIENCE,ENTER_TEN_DIGIT_MOBILE_NUMBER, MOBILE_NUMBER_REQUIRED, PLEASE_SELECT_GENDER, EMAIL_REQUIRED, LAST_NAME_REQUIRED, FIRST_NAME_REQUIRED, COLLEGE_COMPLETED_YEAR_REQUIRED, COLLEGE_JOINED_YEAR_REQUIRED, COLLEGE_NAME_REQUIRED, COMPANY_COMPLETED_YEAR_REQUIRED, COMPANY_JOINED_YEAR_REQUIRED, COMPANY_NAME_REQUIRED} from "@/constants/label"
+import MessageWithButtonComponent from './MessageWithButtonComponent'
+import { FormData, StepperProps } from "../../interfaces"
+import { EDUCATION, EMAIL, WORK_EXPERIENCE, ENTER_TEN_DIGIT_MOBILE_NUMBER, MOBILE_NUMBER_REQUIRED, PLEASE_SELECT_GENDER, EMAIL_REQUIRED, LAST_NAME_REQUIRED, FIRST_NAME_REQUIRED, COLLEGE_COMPLETED_YEAR_REQUIRED, COLLEGE_JOINED_YEAR_REQUIRED, COLLEGE_NAME_REQUIRED, COMPANY_COMPLETED_YEAR_REQUIRED, COMPANY_JOINED_YEAR_REQUIRED, COMPANY_NAME_REQUIRED } from "@/constants/label"
 
 const Stepper: React.FC<StepperProps> = ({ steps }) => {
   const [step, setStep] = useState<number>(0);
+  const [timeLeft, setTimeLeft] = useState(0);
+  const [isDisabled, setIsDisabled] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string>();
   const [formData, setFormData] = useState<FormData>({
     firstName: '',
     lastName: '',
@@ -96,14 +99,14 @@ const Stepper: React.FC<StepperProps> = ({ steps }) => {
       if (!formData.lastName.trim()) newErrors.lastName = LAST_NAME_REQUIRED;
       if (!formData.email.trim()) newErrors.email = EMAIL_REQUIRED;
       if (!formData.gender.trim()) newErrors.gender = PLEASE_SELECT_GENDER;
-      if (!formData.phoneNumber.trim())  newErrors.phoneNumber =  MOBILE_NUMBER_REQUIRED;
-      if (formData.phoneNumber.length > 0 && formData.phoneNumber.length < 10)  newErrors.phoneNumber = ENTER_TEN_DIGIT_MOBILE_NUMBER;
+      if (!formData.phoneNumber.trim()) newErrors.phoneNumber = MOBILE_NUMBER_REQUIRED;
+      if (formData.phoneNumber.length > 0 && formData.phoneNumber.length < 10) newErrors.phoneNumber = ENTER_TEN_DIGIT_MOBILE_NUMBER;
     }
 
     if (currentStep === 1) {
       formData.education.forEach((education, index) => {
         if (!education.collegeName.trim()) newErrors[`collegeName${index}`] = COLLEGE_NAME_REQUIRED;
-        if (!education.joinedOnYear.trim()) newErrors[`joinedOnYear${index}`] = COLLEGE_JOINED_YEAR_REQUIRED ;
+        if (!education.joinedOnYear.trim()) newErrors[`joinedOnYear${index}`] = COLLEGE_JOINED_YEAR_REQUIRED;
         if (!education.completedYear.trim()) newErrors[`completedYear${index}`] = COLLEGE_COMPLETED_YEAR_REQUIRED;
       });
     }
@@ -141,9 +144,14 @@ const Stepper: React.FC<StepperProps> = ({ steps }) => {
     const isAllValid = [1, 2, 3].every(step => validateStep(step));
     if (isAllValid) {
       try {
-        console.log("formData",formData)
         const result = await createUser(formData);
-        setStep(prevStep => prevStep + 1);
+        if (result.status === 200) {
+          setStep(prevStep => prevStep + 1);
+        }
+        else {
+          setErrorMessage(result.message.data.message)
+          setStep(4)
+        }
       } catch (err) {
       }
     }
@@ -156,7 +164,7 @@ const Stepper: React.FC<StepperProps> = ({ steps }) => {
         <div className="stepper">
           <div>
             {steps.map(({ label, content, id }, index) => (
-              <div key={"stpper"+id} className="stepper-container">
+              <div key={"stpper" + id} className="stepper-container">
                 <div
                   className={`step-number ${index <= step ? "active" : ""}`}
                 >
@@ -183,6 +191,7 @@ const Stepper: React.FC<StepperProps> = ({ steps }) => {
             {step === 1 && (<EducationDetails formData={formData} handleInputChange={handleInputChange} addEducation={addEducation} errors={errors} nextStep={nextStep} prevStep={prevStep} handleDeleteFields={handleDeleteFields} />)}
             {step === 2 && (<WorkExperienceDetails formData={formData} handleInputChange={handleInputChange} addWorkExperience={addWorkExperience} errors={errors} nextStep={nextStep} handleDeleteFields={handleDeleteFields} prevStep={prevStep} />)}
             {step === 3 && (<MessageWithButtonComponent />)}
+            {step === 4 && <div className="flex justify-center items-center h-full text-red-500"> {errorMessage}</div>}
 
           </div>
         </div>

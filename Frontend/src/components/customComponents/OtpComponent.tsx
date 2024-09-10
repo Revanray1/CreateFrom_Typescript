@@ -10,11 +10,13 @@ const OtpComponent: React.FC<OtpComponentProps> = ({
   otpData,
   handleInputChange,
   handleResendOtp,
-  handleOtpData
+  handleOtpData,
+  isDisabled,
+  timeLeft
 }) => {
   const myRef = useRef<HTMLDivElement>(null);
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
-  
+
   const handleOtpInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     const index = Object.keys(otpData).indexOf(name);
@@ -117,10 +119,10 @@ const OtpComponent: React.FC<OtpComponentProps> = ({
               </form>
               <div className="flex justify-center text-center mt-3">
                 <button
-                  className="flex items-center text-blue-700 hover:text-blue-900 cursor-pointer"
-                  onClick={handleResendOtp}
+                  className={`flex items-center cursor-pointer`}
+                  onClick={handleResendOtp} disabled={isDisabled}
                 >
-                  <span className="font-bold">Resend OTP</span>
+                  <span className={`font-bold ${isDisabled ? "text-red-500" : "text-blue-700"}`} >{isDisabled ? `Resend OTP in ${timeLeft}s` : 'Resend OTP'}</span>
                   <i className="bx bx-caret-right ml-1"></i>
                 </button>
               </div>

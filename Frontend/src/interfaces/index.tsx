@@ -81,6 +81,8 @@ export interface OtpComponentProps {
   handleInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleResendOtp: (e: React.FormEvent) => void;
   handleOtpData: (e: React.FormEvent) => void;
+  isDisabled:boolean,
+  timeLeft:number
 }
 
 export interface ViewFormDetailsProps {

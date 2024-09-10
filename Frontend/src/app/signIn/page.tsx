@@ -1,18 +1,22 @@
 "use client"
+import React, { useState, useEffect } from 'react'
 import { sendOtp, verifyOtp } from '@/api/userApi';
-import React, { useState } from 'react'
 import { FormData } from "../../interfaces"
 import OtpComponent from '../../components/customComponents/OtpComponent';
 import { OtpDataInterface } from '../../interfaces/index';
 import ViewForm from '@/components/customComponents/ViewForm';
 import EmailComponent from '@/components/customComponents/EmailComponent';
-import { EMAIL, EMAIL_REQUIRED_MESSAGE, ENTER_ALL_FOUR_DIGIT_OTP, ERROR_SENDING_OTP, FORM_DETAILS, OTP,OTP_RESEND_FAILED,PLEASE_ENTER_VALIDE_EMAIL,RESEND_OTP_SUCCESSFULL,Show_FORM, SIGN_IN } from '@/constants/label';
+import { EMAIL, EMAIL_REQUIRED_MESSAGE, ENTER_ALL_FOUR_DIGIT_OTP, ERROR_SENDING_OTP, FORM_DETAILS, OTP, OTP_RESEND_FAILED, PLEASE_ENTER_VALIDE_EMAIL, RESEND_OTP_SUCCESSFULL, Show_FORM, SIGN_IN } from '@/constants/label';
 
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export default function signIn() {
+  const [timeLeft, setTimeLeft] = useState<number>(0);
+  const [isDisabled, setIsDisabled] = useState<boolean>(false);
+
   const [state, setState] = useState<String>(EMAIL);
+  const [errorMessage, setErrorMessage] = useState<String>();
   const [otpData, setOtpData] = useState<OtpDataInterface>({
     firstField: '',
     secondField: '',
@@ -61,12 +65,13 @@ export default function signIn() {
       setEmailErrors({});
       setLoader(true);
       const result = await sendOtp(EmailFormData);
-      if (result) {
+      if (result.status === 200) {
         setState(OTP);
         setLoader(false);
+        setErrorMessage("")
       } else {
+        setErrorMessage(result.message.data.message);
         setLoader(false);
-        console.log(ERROR_SENDING_OTP);
       }
     }
   };
@@ -94,45 +99,64 @@ export default function signIn() {
     setLoader(true);
 
     const result = await verifyOtp({ email: EmailFormData.email, otp: tempOtpData });
-    if (result) {
+    if (result.status === 200) {
       setLoader(false);
       setuserData(result.userData);
       setState(Show_FORM);
+      setErrorMessage("")
     } else {
+      setErrorMessage(result.message.data.message);
       setLoader(false);
-      // custom Error Message need to work on
-
     }
     setOtpData({ firstField: '', secondField: '', thirdField: '', fourthField: '' });
     setErrors({});
   };
 
   const handleResendOtp = async () => {
+    setErrorMessage("")
     const result = await sendOtp(EmailFormData);
-    if(result){
+    if (result.staus === 200) {
       console.log(RESEND_OTP_SUCCESSFULL)
-    }else{
-    console.log(OTP_RESEND_FAILED)
+    } else {
+      setErrorMessage(ERROR_SENDING_OTP)
+      console.log(OTP_RESEND_FAILED)
     }
-  }
+    setTimeLeft(60);
+    setIsDisabled(true);
+  };
 
+  useEffect(() => {
+    let timer: NodeJS.Timeout | null = null;
+
+    if (timeLeft > 0) {
+      timer = setInterval(() => {
+        setTimeLeft(prevTimeLeft => prevTimeLeft - 1);
+      }, 1000);
+    } else {
+      setIsDisabled(false);
+    }
+
+    return () => {
+      if (timer) clearInterval(timer);
+    };
+  }, [timeLeft]);
   return (<>
     <div className='p-8  ' >
       <div className="container mx-auto my-6 flex justify-center" >
         <div className="text-center" >
           <div className='w-52 2xl:w-96 bg-slate-300 hadow-gray-800 rounded p-1' >
-            <h1 className=' text-lg sm:text-sm md:text-2xl lg:text-2xl 2xl:text-6xl text-[#484957] font-bold'>{state === Show_FORM ? FORM_DETAILS: SIGN_IN}</h1>
+            <h1 className=' text-lg sm:text-sm md:text-2xl lg:text-2xl 2xl:text-6xl text-[#484957] font-bold'>{state === Show_FORM ? FORM_DETAILS : SIGN_IN}</h1>
           </div>
         </div>
       </div>
-
+      {errorMessage !== "" && <div className="text-center text-red-500" >{errorMessage}</div>}
       {(state !== "" && state === EMAIL) &&
         <EmailComponent EmailFormData={EmailFormData} handleInputChange={handleInputChange} emailErrors={emailErrors} loader={loader} handleSubmit={handleSubmit} />
       }
 
 
       {(state !== "" && state === OTP && otpData) &&
-        <OtpComponent otpData={otpData} handleInputChange={handleInputChange} loader={loader} handleOtpData={handleOtpData} handleResendOtp={handleResendOtp} errors={errors} />
+        <OtpComponent otpData={otpData} handleInputChange={handleInputChange} loader={loader} handleOtpData={handleOtpData} handleResendOtp={handleResendOtp} errors={errors} isDisabled={isDisabled} timeLeft={timeLeft} />
       }
 
       {(state !== "" && state === Show_FORM && userData) && (
