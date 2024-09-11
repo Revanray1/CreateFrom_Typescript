@@ -1,5 +1,6 @@
 import React from 'react'
 import { ViewFormDetailsProps } from '../../interfaces'
+import backgroundImage  from '../../../public/images/form_background.jpg'
 
 const ViewForm: React.FC<ViewFormDetailsProps> = ({
   userData
@@ -64,6 +65,12 @@ const ViewForm: React.FC<ViewFormDetailsProps> = ({
         </div>
       }
     </div>
+    // <div className='h-screen'>
+    // <div className='border-2 border-black h-[600px] w-4/5 mx-32 my-2 flex'>
+    // <div className='border-2 border-red-700 h-full w-1/3  rounded-tr-[50px]  rounded-br-[50px] background-image'></div>
+    // <div className='border-2 border-red-700  h-full w-2/3' ></div>
+    // </div>
+    // </div>
   )
 }
 

@@ -5,6 +5,7 @@ import Button from './Button';
 import { OtpComponentProps } from '../../interfaces/index';
 
 const OtpComponent: React.FC<OtpComponentProps> = ({
+  loaderOtp,
   errors,
   loader,
   otpData,
@@ -31,7 +32,7 @@ const OtpComponent: React.FC<OtpComponentProps> = ({
       inputRefs.current[index - 1]?.focus();
     }
   };
-
+  console.log(timeLeft)
   useEffect(() => {
     if (myRef.current) {
       const firstInput = myRef.current.children[0] as HTMLInputElement | null;
@@ -42,14 +43,14 @@ const OtpComponent: React.FC<OtpComponentProps> = ({
   }, []);
 
   return (
-    <div className="h-screen bg-blue-500 py-20 px-3">
+    <div className=" bg-blue-500 py-10 px-3 w-full banner_color_grad">
       <div className="container mx-auto">
-        <div className="max-w-sm mx-auto md:max-w-lg">
+        <div className="">
           <div className="w-full">
-            <div className="bg-white h-64 py-3 rounded text-center">
+            <div className="bg-white  py-3 rounded text-center">
               <h1 className="text-2xl font-bold">OTP Verification</h1>
-              <div className="flex flex-col mt-4">
-                <span>Enter the OTP you received at your Email</span>
+              <div className="flex flex-col mt-4 font-kanit p-4">
+                <span >Enter the OTP you received at your Email</span>
               </div>
               <form>
                 <div
@@ -118,13 +119,16 @@ const OtpComponent: React.FC<OtpComponentProps> = ({
                 </div>
               </form>
               <div className="flex justify-center text-center mt-3">
-                <button
-                  className={`flex items-center cursor-pointer`}
-                  onClick={handleResendOtp} disabled={isDisabled}
-                >
-                  <span className={`font-bold ${isDisabled ? "text-red-500" : "text-blue-700"}`} >{isDisabled ? `Resend OTP in ${timeLeft}s` : 'Resend OTP'}</span>
-                  <i className="bx bx-caret-right ml-1"></i>
-                </button>
+                {loaderOtp ? <Button /> : <> {timeLeft <= 60 ?
+                  <button
+                    className={`flex items-center cursor-pointer`}
+                    onClick={handleResendOtp} disabled={isDisabled}
+                  >
+                    <span className={`font-bold ${isDisabled ? "text-red-500" : "text-blue-700"}`} >{isDisabled ? `Resend OTP in ${timeLeft}s` : 'Resend OTP'}</span>
+                    <i className="bx bx-caret-right ml-1"></i>
+                  </button>
+                  : ""}</>
+                }
               </div>
             </div>
           </div>

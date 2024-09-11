@@ -154,3 +154,48 @@ hr.horizontaline {
     font-size: 1.5rem; /* 2xl size for screens larger than 2560px */
   }
 }
+
+@keyframes start_up_animation {
+  0%   { opacity: 0; left: 50px; top: 50px;}
+  50%   { opacity: 0.7%; left: 0px; top: 50px;}
+  100%  { opacity:1; left: 0px; top: 0px;}
+  /* 50%  { background-color: blue; left: 0px; top: 0px;} */
+}
+
+.animation {
+  position: relative ;
+  animation-name: start_up_animation;
+  animation-duration: 1s !important;
+  /* animation-iteration-count: 1;  */
+}
+
+
+@keyframes top_text_animation {
+   0%   { opacity: 0; left: 25px; top: 50px;}
+  50%   { opacity: 0.7%; left: 0px; top: 25px;}
+  100%  { opacity:1; left: 0px; top: 0px;}
+}
+
+.text_top_animation{
+/* width: 100 !important; */
+  position: relative ;
+  animation-name: top_text_animation;
+  animation-duration: 1s !important;
+}
+.banner_color_grad{
+  background-image: linear-gradient(180deg, #8d2af7, #bc4ce6);
+}
+
+.background-image {
+  background-image: url('../../public/images/form_background.jpg');
+  background-size: cover;
+  background-position: center;
+}
+/* 
+.kanit{
+  font-family: var(--font-kanit);
+}
+
+.playfair_display{
+  font-family: var(--font-playfair_display);
+} */

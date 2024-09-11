@@ -77,6 +77,7 @@ export interface BasicDetailsProps {
 export interface OtpComponentProps {
   errors: { [key: string]: string };
   loader: boolean;
+  loaderOtp:boolean;
   otpData: OtpDataInterface;
   handleInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleResendOtp: (e: React.FormEvent) => void;

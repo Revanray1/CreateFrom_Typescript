@@ -14,6 +14,7 @@ const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 export default function signIn() {
   const [timeLeft, setTimeLeft] = useState<number>(0);
   const [isDisabled, setIsDisabled] = useState<boolean>(false);
+  // const [isResendOtpDisabled, setIsDisabled] = useState<boolean>(false);
 
   const [state, setState] = useState<String>(EMAIL);
   const [errorMessage, setErrorMessage] = useState<String>();
@@ -29,6 +30,7 @@ export default function signIn() {
   const [emailErrors, setEmailErrors] = useState<{ [key: string]: string }>({});
   const [userData, setuserData] = useState<FormData>();
   const [loader, setLoader] = useState<boolean>(false);
+  const [loaderOtp, setLoaderOtp] = useState<boolean>(false);
 
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -114,16 +116,24 @@ export default function signIn() {
 
   const handleResendOtp = async () => {
     setErrorMessage("")
+    setLoaderOtp(true);
+
     const result = await sendOtp(EmailFormData);
-    if (result.staus === 200) {
+    if (result.status === 200) {
+      setTimeLeft(60);
+      setIsDisabled(true);
+      setLoaderOtp(false);
+
       console.log(RESEND_OTP_SUCCESSFULL)
     } else {
-      setErrorMessage(ERROR_SENDING_OTP)
-      console.log(OTP_RESEND_FAILED)
-    }
-    setTimeLeft(60);
-    setIsDisabled(true);
-  };
+      if (result?.status === 404 && result.message.data.timerExceed) {
+        setTimeLeft(60 * 15)
+        setErrorMessage(result.message.data.message)
+      }
+      setIsDisabled(true);
+      setLoaderOtp(false);
+    };
+  }
 
   useEffect(() => {
     let timer: NodeJS.Timeout | null = null;
@@ -141,27 +151,55 @@ export default function signIn() {
     };
   }, [timeLeft]);
   return (<>
-    <div className='p-8  ' >
-      <div className="container mx-auto my-6 flex justify-center" >
-        <div className="text-center" >
-          <div className='w-52 2xl:w-96 bg-slate-300 hadow-gray-800 rounded p-1' >
-            <h1 className=' text-lg sm:text-sm md:text-2xl lg:text-2xl 2xl:text-6xl text-[#484957] font-bold'>{state === Show_FORM ? FORM_DETAILS : SIGN_IN}</h1>
+    {(state !== "" && state === Show_FORM && userData) ?
+      <ViewForm userData={userData} /> :
+      <>
+
+        <section className="h-screen">
+          <div className="h-full">
+            <div
+              className="flex h-full flex-wrap items-center justify-center lg:justify-between banner_color_grad">
+              <div
+                className="mb-12 grow-0 basis-auto md:mb-0 md:w-9/12 md:shrink-0 lg:w-6/12 xl:w-6/12">
+                <img
+                  src="https://tecdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.webp"
+                  className="w-full"
+                  alt="Sample image" />
+              </div>
+
+
+
+              <div className="mb-12 md:mb-0 md:w-8/12 lg:w-5/12 xl:w-5/12">
+
+                <div
+                  className="my-4  items-center ">
+                  <div className='flex flwx-row justify-evenly mt-6'>
+                    <div>
+                      <div className='w-[480px]'>
+                        {errorMessage !== "" && <div className="text-center text-white" >{errorMessage}</div>}
+                      </div>
+                      {(state !== "" && state === EMAIL) &&
+                        <div className='animation'  >
+                          <EmailComponent EmailFormData={EmailFormData} handleInputChange={handleInputChange} emailErrors={emailErrors} loader={loader} handleSubmit={handleSubmit} />
+                        </div>
+                      }
+
+                      {(state !== "" && state === OTP && otpData) &&
+                        <div className='animation' >
+                          <OtpComponent otpData={otpData} handleInputChange={handleInputChange} loader={loader} loaderOtp={loaderOtp} handleOtpData={handleOtpData} handleResendOtp={handleResendOtp} errors={errors} isDisabled={isDisabled} timeLeft={timeLeft} />
+                        </div>
+                      }
+                    </div>
+
+
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
-      {errorMessage !== "" && <div className="text-center text-red-500" >{errorMessage}</div>}
-      {(state !== "" && state === EMAIL) &&
-        <EmailComponent EmailFormData={EmailFormData} handleInputChange={handleInputChange} emailErrors={emailErrors} loader={loader} handleSubmit={handleSubmit} />
-      }
+        </section>
+      </>
+    }
 
-
-      {(state !== "" && state === OTP && otpData) &&
-        <OtpComponent otpData={otpData} handleInputChange={handleInputChange} loader={loader} handleOtpData={handleOtpData} handleResendOtp={handleResendOtp} errors={errors} isDisabled={isDisabled} timeLeft={timeLeft} />
-      }
-
-      {(state !== "" && state === Show_FORM && userData) && (
-        <ViewForm userData={userData} />
-      )}
-    </div>
   </>)
 }
