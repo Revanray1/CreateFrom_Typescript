@@ -1,19 +1,12 @@
-"use client";
-import React, { useEffect } from "react";
+import React from "react";
 import { ViewFormDetailsProps } from "../../interfaces";
-import { useSelector } from 'react-redux'
-import { RootState } from "@/store/store";
-
+import backgroundImage from "../../../public/images/form_background.jpg";
 
 const ViewForm: React.FC<ViewFormDetailsProps> = ({ userData }) => {
-  const userFormData = useSelector((state:RootState) => state.formData);
   
-
-  useEffect(()=>{
-    console.log("formData",userFormData,userData)
-  })
-
-  return (
+  return (<>
+  
+  {(userData) ? (
     <div className="h-full bg-blue-500 py-4 rounded-md px-3">
       <div className="grid grid-cols-2 gap-4 bg-white min-h-10 border ">
         <div className="text-center font-bold">First Name </div>
@@ -112,13 +105,23 @@ const ViewForm: React.FC<ViewFormDetailsProps> = ({ userData }) => {
           </div>
         </div>
       )}
-    </div>
-    // <div className='h-screen'>
+    </div> ):(<>
+    
+    <div>
+      helo</div></>)}
+
+
+
+    {/* // <div className='h-screen'>
     // <div className='border-2 border-black h-[600px] w-4/5 mx-32 my-2 flex'>
     // <div className='border-2 border-red-700 h-full w-1/3  rounded-tr-[50px]  rounded-br-[50px] background-image'></div>
     // <div className='border-2 border-red-700  h-full w-2/3' ></div>
     // </div>
     // </div>
+   */}
+  
+  </>
+ 
   );
 };
 
