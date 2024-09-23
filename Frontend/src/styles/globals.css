@@ -1,24 +1,22 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer utilities {
-
   .no-scrollbar::-webkit-scrollbar {
-      display: none;
+    display: none;
   }
   .no-scrollbar {
-      -ms-overflow-style: none;  
-      scrollbar-width: none;  
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
 }
-}
-input[type=number]::-webkit-inner-spin-button, 
-input[type=number]::-webkit-outer-spin-button { 
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    margin: 0; 
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  margin: 0;
 }
 @layer base {
   :root {
@@ -46,7 +44,7 @@ input[type=number]::-webkit-outer-spin-button {
     --chart-3: 197 37% 24%;
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
-    --radius: 0.5rem
+    --radius: 0.5rem;
   }
   .dark {
     --background: 240 10% 3.9%;
@@ -72,7 +70,7 @@ input[type=number]::-webkit-outer-spin-button {
     --chart-2: 160 60% 45%;
     --chart-3: 30 80% 55%;
     --chart-4: 280 65% 60%;
-    --chart-5: 340 75% 55%
+    --chart-5: 340 75% 55%;
   }
 }
 @layer base {
@@ -88,6 +86,10 @@ input[type=number]::-webkit-outer-spin-button {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+
+.h-100vh {
+  min-height: 100vh;
 }
 
 .stepper {
@@ -132,70 +134,136 @@ hr.horizontaline {
   border-top: 1px dotted grey;
 }
 
-@media (min-width: 640px) { /* sm screen size */
-  .placeholder-sm::placeholder {
-    font-size: 1.125rem; /* lg size for small screens */
-  }
-}
-
-@media (min-width: 768px) { /* ms screen size (if using Tailwind's breakpoints) */
-  .placeholder-ms::placeholder {
-    font-size: 1.25rem; /* xl size for medium screens */
-  }
-}
-
-@media (min-width: 1536px) { /* 2xl screen size */
-  .placeholder-2xl::placeholder {
-    font-size: 1.5rem; /* 2xl size for large screens */
-  }
-}
-@media (min-width: 2560px) { /* Custom breakpoint for 2560px */
-  .placeholder-2560::placeholder {
-    font-size: 1.5rem; /* 2xl size for screens larger than 2560px */
-  }
-}
-
-@keyframes start_up_animation {
-  0%   { opacity: 0; left: 50px; top: 50px;}
-  50%   { opacity: 0.7%; left: 0px; top: 50px;}
-  100%  { opacity:1; left: 0px; top: 0px;}
-  /* 50%  { background-color: blue; left: 0px; top: 0px;} */
-}
-
 .animation {
-  position: relative ;
+  position: relative;
+  /* width: 100%; */
   animation-name: start_up_animation;
   animation-duration: 1s !important;
   /* animation-iteration-count: 1;  */
 }
 
+/* .text_top_animation{
+  width: 100 !important;
+    position: relative ;
+    animation-name: top_text_animation;
+    animation-duration: 2s !important;
+  } */
 
-@keyframes top_text_animation {
-   0%   { opacity: 0; left: 25px; top: 50px;}
-  50%   { opacity: 0.7%; left: 0px; top: 25px;}
-  100%  { opacity:1; left: 0px; top: 0px;}
-}
-
-.text_top_animation{
-/* width: 100 !important; */
-  position: relative ;
-  animation-name: top_text_animation;
-  animation-duration: 1s !important;
-}
-.banner_color_grad{
+.banner_color_grad {
   background-image: linear-gradient(180deg, #8d2af7, #bc4ce6);
 }
 
 .background-image {
-  background-image: url('../../public/images/form_background.jpg');
+  background-image: url("../../public/images/form_background.jpg");
   background-size: cover;
   background-position: center;
 }
-/* 
-.kanit{
-  font-family: var(--font-kanit);
+
+@keyframes start_up_animation {
+  0% {
+    opacity: 0;
+    left: 50px;
+    top: 50px;
+  }
+  50% {
+    opacity: 0.7%;
+    left: 0px;
+    top: 50px;
+  }
+  100% {
+    opacity: 1;
+    left: 0px;
+    top: 0px;
+  }
 }
 
-.playfair_display{
-  font-family: var(--font-playfair_display);
-} */
+@keyframes top_text_animation {
+  0% {
+    opacity: 0;
+    left: 25px;
+    top: 50px;
+  }
+  50% {
+    opacity: 0.7%;
+    left: 0px;
+    top: 25px;
+  }
+  100% {
+    opacity: 1;
+    left: 0px;
+    top: 0px;
+  }
+}
+
+@media (min-width: 320px) and (max-width: 375px) {
+  /* Example for small screens */
+  .homepage-container {
+    width: 280px;
+  }
+  .otp-sm-screen-320-width {
+    width: 290px;
+  }
+}
+
+@media (min-width: 375px) and (max-width: 425px) {
+  /* Example for small screens */
+
+  .homepage-container {
+    width: 342px;
+  }
+}
+
+@media (min-width: 425px) and (max-width: 640px) {
+  /* Example for small screens */
+  .homepage-container {
+    width: 342px;
+  }
+}
+@media (min-width: 640px) and (max-width: 768px) {
+  /* Example for small screens */
+
+  .homepage-container {
+    width: 500px;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1024px) {
+  /* Example for medium screens */
+}
+
+@media (min-width: 1024px) and (max-width: 1536px) {
+  /* Example for medium screens */
+}
+
+@media (min-width: 1650px) and (max-width: 2560px) {
+  /* Example for large screens */
+
+  .container-max-2560 {
+    width: 700px;
+    height: 300px;
+  }
+  .email-2xlg-screen-2560-outer-container-width {
+    width: 700px;
+    height: 350px;
+  }
+}
+
+@media (min-width: 2560px) {
+  /* For screens larger than 2560px */
+
+  .lg-screen-2560-justify-between {
+    justify-content: space-between;
+  }
+  .otp-lg-screen-2560-container-width {
+    width: 800px;
+  }
+
+  .email-2xlg-screen-2560-container-width {
+    width: 75%;
+  }
+
+  .email-2xlg-screen-2560-outer-container-width {
+    width: 700px;
+    height: 350px;
+  }
+}

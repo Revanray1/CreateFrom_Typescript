@@ -83,7 +83,9 @@ export interface OtpComponentProps {
   handleResendOtp: (e: React.FormEvent) => void;
   handleOtpData: (e: React.FormEvent) => void;
   isDisabled:boolean,
-  timeLeft:number
+  timeLeft:number,
+  errorMessage:String
+
 }
 
 export interface ViewFormDetailsProps {
@@ -96,4 +98,5 @@ export interface EmailcomponentProps{
   emailErrors:{[key: string]: string};
   loader:boolean;
   handleSubmit:(e: React.FormEvent) => void;
+  errorMessage:String   ;
 }

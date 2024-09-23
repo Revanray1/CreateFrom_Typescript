@@ -1,11 +1,11 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { sendOtp, verifyOtp } from "@/api/userApi";
-import { FormData } from "../../interfaces";
 import OtpComponent from "../../components/customComponents/OtpComponent";
 import { OtpDataInterface } from "../../interfaces/index";
 import ViewForm from "@/components/customComponents/ViewForm";
 import EmailComponent from "@/components/customComponents/EmailComponent";
+import HomePageLayout from "@/components/customComponents/HomepageLayout";
 import {
   EMAIL,
   EMAIL_REQUIRED_MESSAGE,
@@ -25,10 +25,10 @@ export default function SignIn() {
   const dispatch = useDispatch();
   const [timeLeft, setTimeLeft] = useState<number>(0);
   const [isDisabled, setIsDisabled] = useState<boolean>(false);
-  const userData = useSelector((state:RootState) => state.formData);
+  const userData = useSelector((state: RootState) => state.formData);
 
   const [state, setState] = useState<String>(EMAIL);
-  const [errorMessage, setErrorMessage] = useState<String>();
+  const [errorMessage, setErrorMessage] = useState<String>("");
   const [otpData, setOtpData] = useState<OtpDataInterface>({
     firstField: "",
     secondField: "",
@@ -175,62 +175,38 @@ export default function SignIn() {
         <ViewForm userData={userData} />
       ) : (
         <>
-          <section className="h-screen">
-            <div className="h-full">
-              <div className="flex h-full flex-wrap items-center justify-center lg:justify-between banner_color_grad">
-                <div className="mb-12 grow-0 basis-auto md:mb-0 md:w-9/12 md:shrink-0 lg:w-6/12 xl:w-6/12">
-                  <img
-                    src="https://tecdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.webp"
-                    className="w-full"
-                    alt="Sample image"
+          <HomePageLayout>
+            <div className="mb-12 md:mb-0 md:w-8/12 lg:w-5/12 xl:w-5/12">
+              <div className="flex justify-center flex-wrap email-2xlg-screen-2560-container-width">
+                {state !== "" && state === EMAIL && (
+                  <EmailComponent
+                    EmailFormData={EmailFormData}
+                    handleInputChange={handleInputChange}
+                    emailErrors={emailErrors}
+                    loader={loader}
+                    handleSubmit={handleSubmit}
+                    errorMessage={errorMessage}
                   />
-                </div>
+                )}
 
-                <div className="mb-12 md:mb-0 md:w-8/12 lg:w-5/12 xl:w-5/12">
-                  <div className="my-4  items-center ">
-                    <div className="flex flwx-row justify-evenly mt-6">
-                      <div>
-                        <div className="w-[480px]">
-                          {errorMessage !== "" && (
-                            <div className="text-center text-white">
-                              {errorMessage}
-                            </div>
-                          )}
-                        </div>
-                        {state !== "" && state === EMAIL && (
-                          <div className="animation">
-                            <EmailComponent
-                              EmailFormData={EmailFormData}
-                              handleInputChange={handleInputChange}
-                              emailErrors={emailErrors}
-                              loader={loader}
-                              handleSubmit={handleSubmit}
-                            />
-                          </div>
-                        )}
-
-                        {state !== "" && state === OTP && otpData && (
-                          <div className="animation">
-                            <OtpComponent
-                              otpData={otpData}
-                              handleInputChange={handleInputChange}
-                              loader={loader}
-                              loaderOtp={loaderOtp}
-                              handleOtpData={handleOtpData}
-                              handleResendOtp={handleResendOtp}
-                              errors={errors}
-                              isDisabled={isDisabled}
-                              timeLeft={timeLeft}
-                            />
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                {state !== "" && state === OTP && otpData && (
+                  <OtpComponent
+                    otpData={otpData}
+                    handleInputChange={handleInputChange}
+                    loader={loader}
+                    loaderOtp={loaderOtp}
+                    handleOtpData={handleOtpData}
+                    handleResendOtp={handleResendOtp}
+                    errors={errors}
+                    isDisabled={isDisabled}
+                    timeLeft={timeLeft}
+                    errorMessage={errorMessage}
+                  />
+                )}
               </div>
             </div>
-          </section>
+            {/* </div> */}
+          </HomePageLayout>
         </>
       )}
     </>
